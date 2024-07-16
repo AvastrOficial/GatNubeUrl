@@ -1,5 +1,5 @@
 # GatNubeUrl
-Esta herramienta usa 2 apis de almacenamiento donde puedes guardar cualquier archivo mediante peticiones webs y crear un token unico para el archivo compartido hacia el usuario 
+Esta herramienta usa 2 apis de almacenamiento donde puedes guardar cualquier archivo mediante peticiones webs y crear un token unico para el archivo compartido hacia el usuario , podras navegar mediante el editor de archivos de termux y podras selecionar rapidiamente tu archivo que quieras convertir mediante el navegador facil y sencillo 
 <br></br>
 > Solo fuciona para termux 
 # apis : 
@@ -12,3 +12,7 @@ Esta herramienta usa 2 apis de almacenamiento donde puedes guardar cualquier arc
 > <br>
 > pip install -r requirements.txt
 
+# salida forzosa :
+> ^C
+<br></br>
+> Ctrol + C
