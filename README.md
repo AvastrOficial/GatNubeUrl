@@ -6,6 +6,6 @@ Esta herramienta usa 2 apis de almacenamiento donde puedes guardar cualquier arc
 > LITTER : https://litterbox.catbox.moe/resources/internals/api.php
  
 # Intalacion termux :
-> pip install kivy
+> pkg install termux-api
 > <br>
 > pip install -r requirements.txt
