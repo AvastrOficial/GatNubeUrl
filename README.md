@@ -1,7 +1,7 @@
 # GatNubeUrl
 Esta herramienta usa 2 apis de almacenamiento donde puedes guardar cualquier archivo mediante peticiones webs y crear un token unico para el archivo compartido hacia el usuario 
-<br>
-Solo fuciona para termux 
+<br></br>
+> Solo fuciona para termux 
 # apis : 
 > CATBOX : https://catbox.moe/user/api.php
 > <br>
