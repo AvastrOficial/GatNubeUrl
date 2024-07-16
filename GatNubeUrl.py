@@ -41,17 +41,34 @@ def cargar_archivo(opcion, ruta_archivo, expiracion=None):
     except Exception as e:
         print(Fore.RED + f"Ocurrió un error: {e}")
 
-# Función para seleccionar el archivo usando termux-file-editor
+# Función para seleccionar el archivo usando termux-setup-storage
 def seleccionar_archivo():
     try:
-        ruta_archivo = subprocess.check_output(["termux-file-editor", "-t", "Selecciona el archivo que deseas subir"]).decode("utf-8").strip()
-        if os.path.exists(ruta_archivo):
-            return ruta_archivo
-        else:
-            print(Fore.RED + "Archivo no encontrado.")
-            return None
+        # Ejecutar termux-setup-storage para permitir acceso a los archivos del dispositivo
+        subprocess.run(["termux-setup-storage"])
+
+        # Usar 'ls' para listar los archivos en el directorio seleccionado
+        archivos_disponibles = subprocess.check_output(["ls", "-p", "/sdcard"]).decode("utf-8").strip().split('\n')
+
+        # Mostrar los archivos disponibles al usuario
+        print(Fore.YELLOW + "Archivos disponibles:")
+        for idx, archivo in enumerate(archivos_disponibles, start=1):
+            print(f"{idx}. {archivo}")
+
+        # Solicitar al usuario que seleccione un archivo por número
+        while True:
+            try:
+                seleccion = int(input(Fore.CYAN + "Selecciona el número del archivo que deseas subir: "))
+                if 1 <= seleccion <= len(archivos_disponibles):
+                    ruta_archivo = os.path.join("/sdcard", archivos_disponibles[seleccion - 1])
+                    return ruta_archivo
+                else:
+                    print(Fore.RED + "Número fuera de rango. Introduce un número válido.")
+            except ValueError:
+                print(Fore.RED + "Entrada inválida. Introduce un número válido.")
+
     except subprocess.CalledProcessError as e:
-        print(Fore.RED + f"Error al seleccionar el archivo: {e}")
+        print(Fore.RED + f"Error al acceder a los archivos: {e}")
         return None
 
 # Función para mostrar el menú y manejar la opción seleccionada
@@ -60,6 +77,7 @@ def mostrar_menu():
   ____       _   _   _       _          
  / ___| __ _| |_| \ | |_   _| |__   ___ 
 | |  _ / _` | __|  \| | | | | '_ \ / _ \
+
 | |_| | (_| | |_| |\  | |_| | |_) |  __/
  \____|\__,_|\__|_| \_|\__,_|_.__/ \___|
  _   _ ____  _                          
