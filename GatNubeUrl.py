@@ -1,7 +1,7 @@
 import os
 import requests
-import sys
 from colorama import init, Fore, Style
+import subprocess
 
 # Inicializar colorama
 init(autoreset=True)
@@ -41,14 +41,17 @@ def cargar_archivo(opcion, ruta_archivo, expiracion=None):
     except Exception as e:
         print(Fore.RED + f"Ocurrió un error: {e}")
 
-# Función para seleccionar el archivo usando la línea de comandos
+# Función para seleccionar el archivo usando termux-file-editor
 def seleccionar_archivo():
-    print(Fore.YELLOW + "Selecciona el archivo que deseas subir:")
-    ruta_archivo = input("Ruta del archivo: ").strip()
-    if os.path.exists(ruta_archivo):
-        return ruta_archivo
-    else:
-        print(Fore.RED + "Archivo no encontrado.")
+    try:
+        ruta_archivo = subprocess.check_output(["termux-file-editor", "-t", "Selecciona el archivo que deseas subir"]).decode("utf-8").strip()
+        if os.path.exists(ruta_archivo):
+            return ruta_archivo
+        else:
+            print(Fore.RED + "Archivo no encontrado.")
+            return None
+    except subprocess.CalledProcessError as e:
+        print(Fore.RED + f"Error al seleccionar el archivo: {e}")
         return None
 
 # Función para mostrar el menú y manejar la opción seleccionada
