@@ -7,5 +7,5 @@ Esta herramienta usa 2 apis de almacenamiento donde puedes guardar cualquier arc
  
 # Intalacion termux :
 > pip install kivy
-<br>
+> <br>
 > pip install -r requirements.txt
