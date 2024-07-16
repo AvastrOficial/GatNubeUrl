@@ -47,20 +47,23 @@ def seleccionar_archivo():
         # Ejecutar termux-setup-storage para permitir acceso a los archivos del dispositivo
         subprocess.run(["termux-setup-storage"])
 
-        # Usar 'ls' para listar los archivos en el directorio seleccionado
+        # Usar 'ls' para listar los archivos en la carpeta seleccionada por el usuario
         archivos_disponibles = subprocess.check_output(["ls", "-p", "/sdcard"]).decode("utf-8").strip().split('\n')
+
+        # Filtrar solo los archivos, no directorios
+        archivos = [archivo for archivo in archivos_disponibles if not archivo.endswith('/')]
 
         # Mostrar los archivos disponibles al usuario
         print(Fore.YELLOW + "Archivos disponibles:")
-        for idx, archivo in enumerate(archivos_disponibles, start=1):
+        for idx, archivo in enumerate(archivos, start=1):
             print(f"{idx}. {archivo}")
 
         # Solicitar al usuario que seleccione un archivo por número
         while True:
             try:
                 seleccion = int(input(Fore.CYAN + "Selecciona el número del archivo que deseas subir: "))
-                if 1 <= seleccion <= len(archivos_disponibles):
-                    ruta_archivo = os.path.join("/sdcard", archivos_disponibles[seleccion - 1])
+                if 1 <= seleccion <= len(archivos):
+                    ruta_archivo = os.path.join("/sdcard", archivos[seleccion - 1])
                     return ruta_archivo
                 else:
                     print(Fore.RED + "Número fuera de rango. Introduce un número válido.")
