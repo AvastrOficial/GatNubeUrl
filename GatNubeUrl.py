@@ -1,7 +1,6 @@
 import os
 import requests
-from tkinter import Tk
-from tkinter.filedialog import askopenfilename
+import sys
 from colorama import init, Fore, Style
 
 # Inicializar colorama
@@ -42,14 +41,14 @@ def cargar_archivo(opcion, ruta_archivo, expiracion=None):
     except Exception as e:
         print(Fore.RED + f"Ocurrió un error: {e}")
 
-# Función para seleccionar el archivo usando un cuadro de diálogo
+# Función para seleccionar el archivo usando la línea de comandos
 def seleccionar_archivo():
-    Tk().withdraw()  # Oculta la ventana principal de Tkinter
-    ruta_archivo = askopenfilename(title="Selecciona el archivo que deseas subir")
-    if ruta_archivo and os.path.exists(ruta_archivo):
+    print(Fore.YELLOW + "Selecciona el archivo que deseas subir:")
+    ruta_archivo = input("Ruta del archivo: ").strip()
+    if os.path.exists(ruta_archivo):
         return ruta_archivo
     else:
-        print(Fore.RED + "Archivo no encontrado o selección cancelada.")
+        print(Fore.RED + "Archivo no encontrado.")
         return None
 
 # Función para mostrar el menú y manejar la opción seleccionada
@@ -57,7 +56,7 @@ def mostrar_menu():
     banner = Fore.CYAN + Style.BRIGHT + """
   ____       _   _   _       _          
  / ___| __ _| |_| \ | |_   _| |__   ___ 
-| |  _ / _ | __|  \| | | | | '_ \ / _ \
+| |  _ / _` | __|  \| | | | | '_ \ / _ \
 | |_| | (_| | |_| |\  | |_| | |_) |  __/
  \____|\__,_|\__|_| \_|\__,_|_.__/ \___|
  _   _ ____  _                          
@@ -78,7 +77,6 @@ def mostrar_menu():
         print(Fore.YELLOW + """
     /\__/\  _
     • w •  /  3. Salir""")
-
 
         eleccion = input(Fore.CYAN + "Selecciona una opción: ")
 
