@@ -42,29 +42,39 @@ def cargar_archivo(opcion, ruta_archivo, expiracion=None):
         print(Fore.RED + f"Ocurrió un error: {e}")
 
 # Función para seleccionar el archivo usando termux-file-editor
-def seleccionar_archivo():
+def seleccionar_archivo(ruta_actual="/sdcard"):
     try:
-        # Ejecutar termux-setup-storage para permitir acceso a los archivos del dispositivo
-        subprocess.run(["termux-setup-storage"])
-
-        # Obtener lista de archivos en /sdcard
-        archivos_disponibles = os.listdir("/sdcard")
-
-        # Mostrar los archivos disponibles al usuario
-        print(Fore.YELLOW + "Archivos disponibles:")
-        for idx, archivo in enumerate(archivos_disponibles, start=1):
-            print(f"{idx}. {archivo}")
-
-        # Solicitar al usuario que seleccione un archivo por número
         while True:
+            # Ejecutar termux-setup-storage para permitir acceso a los archivos del dispositivo
+            subprocess.run(["termux-setup-storage"])
+
+            # Obtener lista de archivos en la ruta_actual
+            archivos_disponibles = os.listdir(ruta_actual)
+
+            # Mostrar los archivos disponibles al usuario
+            print(Fore.YELLOW + "Archivos disponibles:")
+            for idx, archivo in enumerate(archivos_disponibles, start=1):
+                print(f"{idx}. {archivo}")
+
+            # Solicitar al usuario que seleccione un archivo o carpeta por número
+            seleccion = input(Fore.CYAN + f"Selecciona el número del archivo o carpeta que deseas explorar (0 para regresar): ")
+
+            if seleccion == '0':
+                return seleccionar_archivo(os.path.dirname(ruta_actual))  # Regresar un nivel
+
             try:
-                seleccion = int(input(Fore.CYAN + "Selecciona el número del archivo que deseas subir: "))
+                seleccion = int(seleccion)
                 if 1 <= seleccion <= len(archivos_disponibles):
-                    ruta_archivo = os.path.join("/sdcard", archivos_disponibles[seleccion - 1])
-                    if os.path.isfile(ruta_archivo):
-                        return ruta_archivo
+                    ruta_seleccionada = os.path.join(ruta_actual, archivos_disponibles[seleccion - 1])
+
+                    if os.path.isdir(ruta_seleccionada):
+                        # Si es una carpeta, explorarla recursivamente
+                        return seleccionar_archivo(ruta_seleccionada)
+                    elif os.path.isfile(ruta_seleccionada):
+                        # Si es un archivo, cargarlo
+                        return ruta_seleccionada
                     else:
-                        print(Fore.RED + "La selección no es un archivo válido. Introduce un número válido.")
+                        print(Fore.RED + "La selección no es un archivo válido.")
                 else:
                     print(Fore.RED + "Número fuera de rango. Introduce un número válido.")
             except ValueError:
@@ -100,7 +110,7 @@ def mostrar_menu():
     • w •  /  2. Subir a Litterbox""")
         print(Fore.YELLOW + """
     /\__/\  _
-    • w •  /  3. Salir""")
+    • w •  /  3. Explorar archivos""")
 
         eleccion = input(Fore.CYAN + "Selecciona una opción: ")
 
@@ -118,8 +128,7 @@ def mostrar_menu():
             else:
                 print(Fore.RED + "No se seleccionó ningún archivo.")
         elif eleccion == '3':
-            print(Fore.GREEN + "Saliendo de la herramienta.")
-            break
+            seleccionar_archivo()  # Función para explorar archivos
         else:
             print(Fore.RED + "Opción inválida. Por favor, intenta nuevamente.")
 
